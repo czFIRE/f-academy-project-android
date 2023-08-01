@@ -86,6 +86,10 @@ object Home {
                         .fillMaxSize(),
                 ) {
                     // TODO: COMPOSE UI
+                    items(places) { place ->
+                        //Text(text = place.name);
+                        PlaceItem.Content(place);
+                    }
                 }
             },
         )
