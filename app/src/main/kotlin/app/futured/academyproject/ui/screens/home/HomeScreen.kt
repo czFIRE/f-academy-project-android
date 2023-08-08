@@ -45,6 +45,7 @@ fun HomeScreen(
         EventsEffect {
             onEvent<NavigateToDetailEvent> {
                 // TODO: COMPOSE NAVIGATION
+                navigation.navigateToDetailScreen(placeId = it.placeId)
             }
         }
 
@@ -88,7 +89,10 @@ object Home {
                     // TODO: COMPOSE UI
                     items(places) { place ->
                         //Text(text = place.name);
-                        PlaceItem.Content(place);
+                        PlaceItem(
+                            place = place,
+                            onClick = actions::navigateToDetailScreen,
+                        )
                     }
                 }
             },

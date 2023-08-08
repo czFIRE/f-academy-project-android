@@ -26,5 +26,8 @@ fun NavGraph(
         }
 
         // TODO: COMPOSE NAVIGATION
+        composable(Destination.Detail) {
+            DetailScreen(navigation = navigation)
+        }
     }
 }
