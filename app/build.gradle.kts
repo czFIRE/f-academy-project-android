@@ -154,6 +154,7 @@ dependencies {
     implementation(Dependencies.Support.activityKtx)
     implementation(Dependencies.Support.lifecycleCompiler)
     implementation(Dependencies.Support.preference)
+    implementation("androidx.core:core-ktx:+")
     coreLibraryDesugaring(Dependencies.Support.desugarLibs)
 
     // Compose

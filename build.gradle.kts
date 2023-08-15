@@ -6,13 +6,16 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+    val kotlin_version by extra("1.9.0")
     repositories {
         google()
+        mavenCentral()
     }
     dependencies {
         classpath(Dependencies.gradlePlugin)
         classpath(kotlin(Dependencies.Kotlin.gradlePlugin, Versions.kotlin))
         classpath(Dependencies.hiltPlugin)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
@@ -33,6 +36,7 @@ allprojects {
         google()
         maven { setUrl("https://jitpack.io") }
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 
