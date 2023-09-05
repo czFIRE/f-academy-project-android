@@ -1,6 +1,7 @@
 package app.futured.academyproject.data.persistence
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,9 +14,9 @@ class PlacesPersistence @Inject constructor(
         private const val PLACE_IDS_KEY = "PLACE_IDS_KEY"
     }
     // TODO Step 3 - uncomment code
-//    private val placeIdsFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
-//        persistence.getOrNull(PLACE_IDS_KEY) ?: emptyList()
-//    )
+    private val placeIdsFlow: MutableStateFlow<List<Int>> = MutableStateFlow(
+        persistence.getOrNull(PLACE_IDS_KEY) ?: emptyList()
+    )
 
     // TODO Step 4 - replace "flow { emit(emptyList()) }" with "placeIdsFlow.asStateFlow()"
     fun observePlaceIds(): Flow<List<Int>> = flow { emit(emptyList()) } //placeIdsFlow.asStateFlow()
