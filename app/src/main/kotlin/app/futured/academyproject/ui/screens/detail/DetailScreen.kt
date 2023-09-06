@@ -5,9 +5,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -70,6 +73,20 @@ object Detail {
                         // When place is not favorite use Icons.Filled.FavoriteBorder icon and MaterialTheme.colorScheme.onSurface color
                         // Use IconButton component
                         // Use on click listener onFavorite (Hint: onClick = actions::onFavorite)
+
+                        val (iconRes, iconColor) = if (place?.isFavourite == true) {
+                            Icons.Filled.Favorite to MaterialTheme.colorScheme.error
+                        } else {
+                            Icons.Filled.FavoriteBorder to MaterialTheme.colorScheme.onSurface
+                        }
+
+                        IconButton(onClick = actions::onFavorite) {
+                            Icon(
+                                imageVector = iconRes,
+                                tint = iconColor,
+                                contentDescription = null,
+                            )
+                        }
                     },
                     navigationIcon = {
                         IconButton(onClick = { actions.navigateBack() }) {
