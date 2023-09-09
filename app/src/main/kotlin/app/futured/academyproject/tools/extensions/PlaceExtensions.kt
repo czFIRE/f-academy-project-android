@@ -9,3 +9,13 @@ fun Place.createNavigationIntent(): Intent = Intent(
     Intent.ACTION_VIEW,
     Uri.parse("geo:${latitude},${longitude}?q=${name}"),
 )
+
+fun Place.makeCallIntent(): Intent = Intent(
+    Intent.ACTION_DIAL,
+    Uri.parse("tel:${phone}"),
+)
+
+fun Place.sendEmailIntent(): Intent = Intent(
+    Intent.ACTION_SENDTO,
+    Uri.parse("mailto:${email}")
+)

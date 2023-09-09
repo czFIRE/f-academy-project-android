@@ -1,13 +1,19 @@
 package app.futured.academyproject.ui.screens.detail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Navigation
+import androidx.compose.material.icons.filled.PhoneCallback
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -20,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.futured.academyproject.data.model.local.Place
@@ -28,7 +35,12 @@ import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
 import app.futured.academyproject.tools.extensions.createNavigationIntent
+import app.futured.academyproject.tools.extensions.makeCallIntent
+import app.futured.academyproject.tools.extensions.sendEmailIntent
 import app.futured.academyproject.ui.components.Showcase
+import app.futured.academyproject.ui.theme.Grid
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 
 @Composable
 fun DetailScreen(
@@ -98,26 +110,99 @@ object Detail {
             },
             modifier = modifier,
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = {
-                        context.startActivity(
-                            place?.createNavigationIntent(),
-                        )
-                    },
+
+            },
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier
+                        .padding(vertical = Grid.d2, horizontal = Grid.d4)
                 ) {
-                    Icon(painter = rememberVectorPainter(image = Icons.Filled.Navigation), contentDescription = null)
+                    FloatingActionButton(
+                        onClick = {
+                            context.startActivity(
+                                place?.createNavigationIntent(),
+                            )
+                        },
+                    ) {
+                        Icon(painter = rememberVectorPainter(image = Icons.Filled.Navigation), contentDescription = null)
+                    }
+
+                    // Phone Icon and Intent
+                    FloatingActionButton(
+                        onClick = {
+                            context.startActivity(
+                                place?.makeCallIntent(),
+                            )
+                        },
+                    ) {
+                        Icon(
+                            painter = rememberVectorPainter(image = Icons.Filled.PhoneCallback),
+                            contentDescription = null,
+                        )
+                    }
+
+                    // Email Icon and Intent
+                    FloatingActionButton(
+                        onClick = {
+                            context.startActivity(
+                                place?.sendEmailIntent(),
+                            )
+                        },
+                    ) {
+                        Icon(
+                            painter = rememberVectorPainter(image = Icons.Filled.Email),
+                            contentDescription = null,
+                        )
+                    }
                 }
             },
         ) { contentPadding ->
             place?.let {
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .padding(contentPadding)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .padding(contentPadding),
                 ) {
-                    Text(text = place.name)
+                    Text(
+                        text = place.name,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(vertical = Grid.d2, horizontal = Grid.d4)
+                            .fillMaxWidth(),
+                    ) {
+                        // Load image using Coil
+                        Image(
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(place.image1Url)
+                                    .crossfade(true)
+                                    .build(),
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                        )
+                    }
+
+                    // Display the description from place.description
+
+
+                    // Create a Row for phone and email icons and intents
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(vertical = Grid.d2, horizontal = Grid.d4)
+                            .fillMaxWidth(),
+                    ) {
+                        Text(text = place.note ?: "hehe")
+
+                    }
                 }
+
             }
         }
     }
