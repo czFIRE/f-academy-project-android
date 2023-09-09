@@ -19,3 +19,8 @@ fun Place.sendEmailIntent(): Intent = Intent(
     Intent.ACTION_SENDTO,
     Uri.parse("mailto:${email}")
 )
+
+fun Place.accessWebIntent(): Intent = Intent(
+    Intent.ACTION_VIEW,
+    Uri.parse(if (webUrl != null && !webUrl.startsWith("http://") && !webUrl.startsWith("https://")) "http://" + webUrl else webUrl)
+)

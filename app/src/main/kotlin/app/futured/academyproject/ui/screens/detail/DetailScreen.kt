@@ -1,6 +1,8 @@
 package app.futured.academyproject.ui.screens.detail
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.filled.PhoneCallback
+import androidx.compose.material.icons.filled.Web
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -25,6 +28,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +38,7 @@ import app.futured.academyproject.navigation.NavigationDestinations
 import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
+import app.futured.academyproject.tools.extensions.accessWebIntent
 import app.futured.academyproject.tools.extensions.createNavigationIntent
 import app.futured.academyproject.tools.extensions.makeCallIntent
 import app.futured.academyproject.tools.extensions.sendEmailIntent
@@ -123,6 +128,7 @@ object Detail {
                                 place?.createNavigationIntent(),
                             )
                         },
+
                     ) {
                         Icon(painter = rememberVectorPainter(image = Icons.Filled.Navigation), contentDescription = null)
                     }
@@ -130,10 +136,14 @@ object Detail {
                     // Phone Icon and Intent
                     FloatingActionButton(
                         onClick = {
-                            context.startActivity(
-                                place?.makeCallIntent(),
-                            )
+                            if (place?.phone != null) {
+                                context.startActivity(
+                                    place?.makeCallIntent(),
+                                )
+                            }
+
                         },
+                        modifier = Modifier.background(color = (if (place?.phone != null) Color.Unspecified else Color.Gray))
                     ) {
                         Icon(
                             painter = rememberVectorPainter(image = Icons.Filled.PhoneCallback),
@@ -144,17 +154,39 @@ object Detail {
                     // Email Icon and Intent
                     FloatingActionButton(
                         onClick = {
-                            context.startActivity(
-                                place?.sendEmailIntent(),
-                            )
+                            if (place?.email != null) {
+                                context.startActivity(
+                                    place?.sendEmailIntent(),
+                                )
+                            }
                         },
+                        modifier = Modifier.background(color = (if (place?.email != null) Color.Unspecified else Color.Gray))
+
                     ) {
                         Icon(
                             painter = rememberVectorPainter(image = Icons.Filled.Email),
                             contentDescription = null,
                         )
                     }
+
+                    FloatingActionButton(
+                        onClick = {
+                            if (place?.webUrl != null) {
+                                context.startActivity(
+                                    place?.accessWebIntent(),
+                                )
+                            }
+                        },
+                        modifier = Modifier.background(color = (if (place?.webUrl != null) Color.Unspecified else Color.Gray))
+
+                    ) {
+                        Icon(
+                            painter = rememberVectorPainter(image = Icons.Filled.Web),
+                            contentDescription = null,
+                        )
+                    }
                 }
+
             },
         ) { contentPadding ->
             place?.let {
