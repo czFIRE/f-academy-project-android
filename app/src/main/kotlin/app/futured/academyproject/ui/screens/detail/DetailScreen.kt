@@ -223,15 +223,32 @@ object Detail {
                     // Display the description from place.description
 
 
-                    // Create a Row for phone and email icons and intents
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(vertical = Grid.d2, horizontal = Grid.d4)
                             .fillMaxWidth(),
                     ) {
-                        Text(text = place.note ?: "hehe")
+                        Text(text = "Druh místa: " + (place.type?: "Neuvedeno"))
+                    }
 
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(vertical = Grid.d2, horizontal = Grid.d4)
+                            .fillMaxWidth(),
+                    ) {
+                        val address = if (place.street == null || place.streetNumber == null) "Neuvedena" else "${place.street} ${place.streetNumber}"
+                        Text(text = "Adresa: $address")
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(vertical = Grid.d2, horizontal = Grid.d4)
+                            .fillMaxWidth(),
+                    ) {
+                        Text(text = "Poznámka: " + (place.note?: "Neuvedena"))
                     }
                 }
 
