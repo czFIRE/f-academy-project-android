@@ -6,6 +6,7 @@ import app.futured.academyproject.data.model.local.Place
 import app.futured.academyproject.domain.GetLastLocationUseCase
 import app.futured.academyproject.domain.GetPlacesFlowUseCase
 import app.futured.academyproject.tools.arch.BaseViewModel
+import app.futured.academyproject.ui.components.MenuItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import timber.log.Timber
