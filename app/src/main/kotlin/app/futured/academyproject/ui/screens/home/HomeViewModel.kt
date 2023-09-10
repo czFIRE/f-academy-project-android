@@ -1,5 +1,6 @@
 package app.futured.academyproject.ui.screens.home
 
+import androidx.compose.material3.DrawerState
 import androidx.compose.ui.text.toLowerCase
 import app.futured.academyproject.data.model.local.Place
 import app.futured.academyproject.domain.GetLastLocationUseCase
@@ -68,6 +69,12 @@ class HomeViewModel @Inject constructor(
                 Timber.e(error)
                 viewState.error = error
             }
+        }
+    }
+
+    override suspend fun openDrawer(drawerState: DrawerState) {
+        drawerState.apply {
+            if (isClosed) open() else close()
         }
     }
 }

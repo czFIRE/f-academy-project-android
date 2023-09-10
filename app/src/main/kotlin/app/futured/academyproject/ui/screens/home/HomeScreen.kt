@@ -21,23 +21,29 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DrawerState
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -63,11 +69,15 @@ import app.futured.academyproject.tools.arch.EventsEffect
 import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
 import app.futured.academyproject.tools.preview.PlacesProvider
+import app.futured.academyproject.ui.components.DrawerBody
 import app.futured.academyproject.ui.components.PlaceCard
 import app.futured.academyproject.ui.components.Showcase
+import app.futured.academyproject.ui.components.drawerScreens
 import app.futured.academyproject.ui.theme.Grid
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
@@ -108,6 +118,8 @@ object Home {
         fun loadCulturalPlaces() = Unit
 
         fun loadCulturalPlacesByName(placeName: String) = Unit
+
+        suspend fun openDrawer(drawerState: DrawerState) = Unit
     }
 
     object PreviewActions : Actions
@@ -122,45 +134,62 @@ object Home {
     ) {
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-        Scaffold(
-            modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-            topBar = {
-                HomeTopAppBar(scrollBehavior, actions)
+        val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+        val scope = rememberCoroutineScope()
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerBody(menuItems = drawerScreens, scope = scope, onItemClick = { println(this) })
+                }
             },
-            content = { innerPadding ->
-                when {
-                    error != null -> {
-                        Error(onTryAgain = actions::tryAgain)
-                    }
+        ) {
+            Scaffold(
+                modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+                topBar = {
+                    HomeTopAppBar(scrollBehavior, actions, drawerState, scope)
+                },
 
-                    places.isEmpty() -> {
-                        Loading()
-                    }
+                content = { innerPadding ->
+                    when {
+                        error != null -> {
+                            Error(onTryAgain = actions::tryAgain)
+                        }
 
-                    places.isNotEmpty() -> {
-                        LazyColumn(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            contentPadding = innerPadding,
-                            verticalArrangement = Arrangement.spacedBy(Grid.d1),
-                            modifier = Modifier
-                                .fillMaxSize(),
-                        ) {
-                            items(places) { place ->
-                                PlaceCard(
-                                    place = place,
-                                    onClick = actions::navigateToDetailScreen,
-                                )
+                        places.isEmpty() -> {
+                            Loading()
+                        }
+
+                        places.isNotEmpty() -> {
+                            LazyColumn(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                contentPadding = innerPadding,
+                                verticalArrangement = Arrangement.spacedBy(Grid.d1),
+                                modifier = Modifier
+                                    .fillMaxSize(),
+                            ) {
+                                items(places) { place ->
+                                    PlaceCard(
+                                        place = place,
+                                        onClick = actions::navigateToDetailScreen,
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            },
-        )
+                },
+            )
+        }
     }
 
     @Composable
     @OptIn(ExperimentalMaterial3Api::class)
-    private fun HomeTopAppBar(scrollBehavior: TopAppBarScrollBehavior, actions: Actions) {
+    private fun HomeTopAppBar(
+        scrollBehavior: TopAppBarScrollBehavior,
+        actions: Actions,
+        drawerState: DrawerState,
+        scope: CoroutineScope,
+    ) {
         LargeTopAppBar(
             title = {
                 Text(
@@ -171,7 +200,15 @@ object Home {
             },
             // TODO: Add the navigation sidebar with some usefull actions
             navigationIcon = {
-                IconButton(onClick = { println("Clicked hehe") }) {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
+                        }
+                    },
+                ) {
                     Icon(
                         imageVector = Icons.Filled.Menu,
                         contentDescription = null,

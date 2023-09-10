@@ -6,5 +6,10 @@
     <string name="error_general_server_error">Něco se pokazilo a ne na vašem přijímači. Zkuste to později.</string>
     <string name="error_unauthorized">Nejste přihlášení a to byste měli.</string>
 
-    <string name="app_map_name">Davidova Kultůromapa</string>
+    <string name="app_map_name">Petrova coolturomapa</string>
+
+    <!-- other strings... -->
+    <string name="screen_1">All</string>
+    <string name="screen_2">Liked</string>
+    <string name="screen_3">Unliked</string>
 </resources>
