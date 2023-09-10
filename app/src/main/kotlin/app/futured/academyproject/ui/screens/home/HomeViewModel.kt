@@ -1,5 +1,7 @@
 package app.futured.academyproject.ui.screens.home
 
+import androidx.compose.ui.text.toLowerCase
+import app.futured.academyproject.data.model.local.Place
 import app.futured.academyproject.domain.GetLastLocationUseCase
 import app.futured.academyproject.domain.GetPlacesFlowUseCase
 import app.futured.academyproject.tools.arch.BaseViewModel
@@ -51,5 +53,21 @@ class HomeViewModel @Inject constructor(
             }
         }
         Timber.d("Location permission allowed")
+    }
+
+    override fun loadCulturalPlacesByName(placeName: String) {
+        viewState.error = null
+
+        getPlacesFlowUseCase.execute(viewState.location) {
+            onNext {
+                Timber.d("Cultural places: $it")
+
+                viewState.places = it.filter { place: Place -> place.name.lowercase().contains(placeName.lowercase()) }.toPersistentList()
+            }
+            onError { error ->
+                Timber.e(error)
+                viewState.error = error
+            }
+        }
     }
 }
