@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.sp
 import app.futured.academyproject.ui.theme.Grid
 
 @Composable
-fun DrawerItem(menuItem: MenuItem, modifier: Modifier = Modifier, onItemClick: (MenuItem) -> Unit) {
+fun DrawerItem(menuItem: MenuItem, modifier: Modifier = Modifier, onItemClick: () -> Unit) {
     Column(
         modifier = Modifier.clickable {
-            onItemClick(menuItem)
+            onItemClick()
         }
     ) {
         Row(

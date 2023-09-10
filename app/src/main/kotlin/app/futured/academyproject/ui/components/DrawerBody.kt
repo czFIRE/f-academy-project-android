@@ -12,13 +12,13 @@ import kotlinx.coroutines.launch
 fun DrawerBody(
     menuItems: List<MenuItem>,
     modifier: Modifier = Modifier,
-    onItemClick: (MenuItem) -> Unit,
+    onItemClickFunctions: List<() -> Unit>,
 ) {
     LazyColumn(
         modifier = modifier
     ) {
         items(menuItems) { item ->
-            DrawerItem(menuItem = item, onItemClick = onItemClick)
+            DrawerItem(menuItem = item, onItemClick = onItemClickFunctions[item.id.ordinal])
         }
     }
 }

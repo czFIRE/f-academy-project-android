@@ -12,4 +12,6 @@
     <string name="screen_1">All</string>
     <string name="screen_2">Liked</string>
     <string name="screen_3">Unliked</string>
+    <string name="screen_4">Alphabetical sort</string>
+    <string name="screen_5">Distance sort</string>
 </resources>

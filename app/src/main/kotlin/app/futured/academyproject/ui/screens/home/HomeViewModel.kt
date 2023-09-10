@@ -73,9 +73,43 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override suspend fun openDrawer(drawerState: DrawerState) {
-        drawerState.apply {
-            if (isClosed) open() else close()
+    override fun getAllLikedPlaces() {
+        viewState.error = null
+
+        getPlacesFlowUseCase.execute(viewState.location) {
+            onNext {
+                Timber.d("Cultural places: $it")
+
+                viewState.places = it.filter { place: Place -> place.isFavourite }.toPersistentList()
+            }
+            onError { error ->
+                Timber.e(error)
+                viewState.error = error
+            }
         }
+    }
+
+    override fun getAllDislikedPlaces() {
+        viewState.error = null
+
+        getPlacesFlowUseCase.execute(viewState.location) {
+            onNext {
+                Timber.d("Cultural places: $it")
+
+                viewState.places = it.filter { place: Place -> !place.isFavourite }.toPersistentList()
+            }
+            onError { error ->
+                Timber.e(error)
+                viewState.error = error
+            }
+        }
+    }
+
+    override fun getPlacesByDistance() {
+        viewState.places = viewState.places.sortedBy { it.distance }.toPersistentList()
+    }
+
+    override fun getPlacesAlphabetically() {
+        viewState.places = viewState.places.sortedBy { it.name }.toPersistentList()
     }
 }

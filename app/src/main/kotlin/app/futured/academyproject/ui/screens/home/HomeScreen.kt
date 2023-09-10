@@ -66,6 +66,7 @@ import app.futured.academyproject.tools.arch.onEvent
 import app.futured.academyproject.tools.compose.ScreenPreviews
 import app.futured.academyproject.tools.preview.PlacesProvider
 import app.futured.academyproject.ui.components.DrawerBody
+import app.futured.academyproject.ui.components.MenuItem
 import app.futured.academyproject.ui.components.PlaceCard
 import app.futured.academyproject.ui.components.Showcase
 import app.futured.academyproject.ui.components.drawerItems
@@ -114,7 +115,13 @@ object Home {
 
         fun loadCulturalPlacesByName(placeName: String) = Unit
 
-        suspend fun openDrawer(drawerState: DrawerState) = Unit
+        fun getAllLikedPlaces() = Unit
+
+        fun getAllDislikedPlaces() = Unit
+
+        fun getPlacesByDistance() = Unit
+
+        fun getPlacesAlphabetically() = Unit
     }
 
     object PreviewActions : Actions
@@ -131,11 +138,20 @@ object Home {
 
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
+
+        val functionList = mutableListOf<() -> Unit>()
+
+        functionList.add(actions::loadCulturalPlaces)
+        functionList.add(actions::getAllLikedPlaces)
+        functionList.add(actions::getAllDislikedPlaces)
+        functionList.add(actions::getPlacesAlphabetically)
+        functionList.add(actions::getPlacesByDistance)
+
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet {
-                    DrawerBody(menuItems = drawerItems, scope = scope, onItemClick = { println(this) })
+                    DrawerBody(menuItems = drawerItems, onItemClickFunctions = functionList)
                 }
             },
         ) {
